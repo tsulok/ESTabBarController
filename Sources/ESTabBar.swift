@@ -50,7 +50,7 @@ public enum ESTabBarItemPositioning : Int {
 
 /// 对UITabBarDelegate进行扩展，以支持UITabBarControllerDelegate的相关方法桥接
 internal protocol ESTabBarDelegate: NSObjectProtocol {
-
+    
     /// 当前item是否支持选中
     ///
     /// - Parameters:
@@ -73,14 +73,14 @@ internal protocol ESTabBarDelegate: NSObjectProtocol {
     ///   - tabBar: tabBar
     ///   - item: 当前item
     /// - Returns: Void
-    func tabBar(_ tabBar: UITabBar, didHijack item: UITabBarItem)
+    func tabBar(_ tabBar: UITabBar, didHijack item: UITabBarItem) -> Bool
 }
 
 
 
 /// ESTabBar是高度自定义的UITabBar子类，通过添加UIControl的方式实现自定义tabBarItem的效果。目前支持tabBar的大部分属性的设置，例如delegate,items,selectedImge,itemPositioning,itemWidth,itemSpacing等，以后会更加细致的优化tabBar原有属性的设置效果。
 open class ESTabBar: UITabBar {
-
+    
     internal weak var customDelegate: ESTabBarDelegate?
     
     /// tabBar中items布局偏移量
@@ -336,11 +336,13 @@ internal extension ESTabBar /* Actions */ {
         }
         
         if (customDelegate?.tabBar(self, shouldHijack: item) ?? false) == true {
-            customDelegate?.tabBar(self, didHijack: item)
+            let shouldDeselect = customDelegate?.tabBar(self, didHijack: item)
             if animated {
                 if let item = item as? ESTabBarItem {
                     item.contentView?.select(animated: animated, completion: {
-                        item.contentView?.deselect(animated: false, completion: nil)
+                        if let deselect = shouldDeselect, deselect {
+                            item.contentView?.deselect(animated: false, completion: nil)
+                        }
                     })
                 } else if self.isMoreItem(newIndex) {
                     moreContentView?.select(animated: animated, completion: {
@@ -391,7 +393,7 @@ internal extension ESTabBar /* Actions */ {
                         }
                     }
                 }
-            
+                
             }
         }
         
@@ -408,7 +410,7 @@ internal extension ESTabBar /* Actions */ {
             var accessibilityTitle = ""
             
             if let item = item as? ESTabBarItem {
-                accessibilityTitle = item.accessibilityLabel ?? item.title ?? ""
+                accessibilityTitle = item.title ?? ""
             }
             if self.isMoreItem(idx) {
                 accessibilityTitle = NSLocalizedString("More_TabBarItem", bundle: Bundle(for:ESTabBarController.self), comment: "")
@@ -417,9 +419,9 @@ internal extension ESTabBar /* Actions */ {
             let formatString = NSLocalizedString(item == selectedItem ? "TabBarItem_Selected_AccessibilityLabel" : "TabBarItem_AccessibilityLabel",
                                                  bundle: Bundle(for: ESTabBarController.self),
                                                  comment: "")
-            container.accessibilityIdentifier = item.accessibilityIdentifier
             container.accessibilityLabel = String(format: formatString, accessibilityTitle, idx + 1, tabBarItems.count)
             
         }
     }
 }
+
