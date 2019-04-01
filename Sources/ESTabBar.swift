@@ -2,7 +2,7 @@
 //  ESTabBar.swift
 //
 //  Created by Vincent Li on 2017/2/8.
-//  Copyright (c) 2013-2017 ESTabBarController (https://github.com/eggswift/ESTabBarController)
+//  Copyright (c) 2013-2018 ESTabBarController (https://github.com/eggswift/ESTabBarController)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -214,7 +214,9 @@ internal extension ESTabBar /* Layout */ {
         if layoutBaseSystem {
             // System itemPositioning
             for (idx, container) in containers.enumerated(){
-                container.frame = tabBarButtons[idx].frame
+                if !tabBarButtons[idx].frame.isEmpty {
+                    container.frame = tabBarButtons[idx].frame
+                }
             }
         } else {
             // Custom itemPositioning
@@ -274,6 +276,7 @@ internal extension ESTabBar /* Actions */ {
             }
         }
         
+        self.updateAccessibilityLabels()
         self.setNeedsLayout()
     }
     
@@ -366,7 +369,6 @@ internal extension ESTabBar /* Actions */ {
             } else if self.isMoreItem(newIndex) {
                 moreContentView?.select(animated: animated, completion: nil)
             }
-            delegate?.tabBar?(self, didSelect: item)
         } else if currentIndex == newIndex {
             if let item = item as? ESTabBarItem {
                 item.contentView?.reselect(animated: animated, completion: nil)
@@ -397,6 +399,7 @@ internal extension ESTabBar /* Actions */ {
             }
         }
         
+        delegate?.tabBar?(self, didSelect: item)
         self.updateAccessibilityLabels()
     }
     
@@ -407,19 +410,30 @@ internal extension ESTabBar /* Actions */ {
         
         for (idx, item) in tabBarItems.enumerated() {
             let container = self.containers[idx]
-            var accessibilityTitle = ""
+            container.accessibilityIdentifier = item.accessibilityIdentifier
+            container.accessibilityTraits = item.accessibilityTraits
             
-            if let item = item as? ESTabBarItem {
-                accessibilityTitle = item.title ?? ""
-            }
-            if self.isMoreItem(idx) {
-                accessibilityTitle = NSLocalizedString("More_TabBarItem", bundle: Bundle(for:ESTabBarController.self), comment: "")
+            if item == selectedItem {
+                container.accessibilityTraits = container.accessibilityTraits.union(.selected)
             }
             
-            let formatString = NSLocalizedString(item == selectedItem ? "TabBarItem_Selected_AccessibilityLabel" : "TabBarItem_AccessibilityLabel",
-                                                 bundle: Bundle(for: ESTabBarController.self),
-                                                 comment: "")
-            container.accessibilityLabel = String(format: formatString, accessibilityTitle, idx + 1, tabBarItems.count)
+            if let explicitLabel = item.accessibilityLabel {
+                container.accessibilityLabel = explicitLabel
+                container.accessibilityHint = item.accessibilityHint ?? container.accessibilityHint
+            } else {
+                var accessibilityTitle = ""
+                if let item = item as? ESTabBarItem {
+                    accessibilityTitle = item.accessibilityLabel ?? item.title ?? ""
+                }
+                if self.isMoreItem(idx) {
+                    accessibilityTitle = NSLocalizedString("More_TabBarItem", bundle: Bundle(for:ESTabBarController.self), comment: "")
+                }
+                
+                let formatString = NSLocalizedString(item == selectedItem ? "TabBarItem_Selected_AccessibilityLabel" : "TabBarItem_AccessibilityLabel",
+                                                     bundle: Bundle(for: ESTabBarController.self),
+                                                     comment: "")
+                container.accessibilityLabel = String(format: formatString, accessibilityTitle, idx + 1, tabBarItems.count)
+            }
             
         }
     }

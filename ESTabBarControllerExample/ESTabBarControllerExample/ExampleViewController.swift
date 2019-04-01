@@ -3,7 +3,7 @@
 //  ESTabBarControllerExample
 //
 //  Created by lihao on 16/5/16.
-//  Copyright © 2017年 Egg Swift. All rights reserved.
+//  Copyright © 2018年 Egg Swift. All rights reserved.
 //
 
 import Foundation
@@ -72,7 +72,7 @@ public class ExampleViewController: UIViewController {
         button.frame = CGRect.init(x: (self.view.bounds.size.width - size.width) / 2.0, y: self.view.bounds.size.height - 120, width: size.width, height: 42.0)
     }
     
-    public func homePageAction() {
+    @objc public func homePageAction() {
         let vc = WebViewController.instanceFromStoryBoard()
         vc.hidesBottomBarWhenPushed = true
         if let navigationController = navigationController {
@@ -82,7 +82,7 @@ public class ExampleViewController: UIViewController {
         present(vc, animated: true, completion: nil)
     }
     
-    public func backAction() {
+    @objc public func backAction() {
         if let navigationController = navigationController {
             if navigationController.viewControllers.count > 1 {
                 navigationController.popViewController(animated: true)

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name              = 'ESTabBarController-swift'
-s.version           = '2.5'
+s.version           = '2.6.4'
 s.summary           = 'An easy way to customize tabBarController and tabBarItem.'
 s.homepage          = 'https://github.com/eggswift/ESTabBarController'
 
@@ -10,5 +10,6 @@ s.social_media_url  = 'https://github.com/eggswift'
 s.platform          = :ios, '8.0'
 s.source            = {:git => 'https://github.com/eggswift/ESTabBarController.git', :tag => s.version}
 s.source_files      = ['Sources/**/*.{swift}']
+s.resources         = ['Sources/**/*.{lproj}']
 s.requires_arc      = true
 end

@@ -3,7 +3,7 @@
 //  ESTabBarControllerExample
 //
 //  Created by lihao on 2017/2/9.
-//  Copyright © 2017年 Vincent Li. All rights reserved.
+//  Copyright © 2018年 Egg Swift. All rights reserved.
 //
 
 import UIKit
@@ -34,7 +34,7 @@ class ExampleBouncesContentView: ExampleBasicContentView {
         let impliesAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
         impliesAnimation.values = [1.0 ,1.4, 0.9, 1.15, 0.95, 1.02, 1.0]
         impliesAnimation.duration = duration * 2
-        impliesAnimation.calculationMode = kCAAnimationCubic
+        impliesAnimation.calculationMode = CAAnimationCalculationMode.cubic
         imageView.layer.add(impliesAnimation, forKey: nil)
     }
 }

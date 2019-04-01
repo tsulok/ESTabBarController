@@ -3,7 +3,7 @@
 //  ESTabBarControllerExample
 //
 //  Created by lihao on 2017/2/10.
-//  Copyright © 2017年 Vincent Li. All rights reserved.
+//  Copyright © 2018年 Egg Swift. All rights reserved.
 //
 
 import UIKit
@@ -30,7 +30,7 @@ class ExampleTipsBasicContentView: ExampleBouncesContentView {
 class ExampleTipsContentView: ExampleTipsBasicContentView {
     
     var tipsImageView: UIImageView = {
-        let tipsImageView = UIImageView.init(image: UIImage.init(named: "tips")?.resizableImage(withCapInsets: UIEdgeInsets.init(top: 10, left: 10, bottom: 25, right: 25), resizingMode: UIImageResizingMode.stretch))
+        let tipsImageView = UIImageView.init(image: UIImage.init(named: "tips")?.resizableImage(withCapInsets: UIEdgeInsets.init(top: 10, left: 10, bottom: 25, right: 25), resizingMode: UIImage.ResizingMode.stretch))
         return tipsImageView
     }()
     
