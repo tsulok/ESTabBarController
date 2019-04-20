@@ -182,7 +182,8 @@ open class ESTabBarItemContentView: UIView {
             }
         }
     }
-    
+    open var sizeMultiplier: CGFloat = 1.0
+
     // MARK: -
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -223,10 +224,10 @@ open class ESTabBarItemContentView: UIView {
             }
             let isWide = isLandscape || traitCollection.horizontalSizeClass == .regular // is landscape or regular
             if #available(iOS 11.0, *), isWide {
-                s = UIScreen.main.scale == 3.0 ? 23.0 : 20.0
+                s = sizeMultiplier * UIScreen.main.scale == 3.0 ? 23.0 : 20.0
                 f = UIScreen.main.scale == 3.0 ? 13.0 : 12.0
             } else {
-                s = 23.0
+                s = sizeMultiplier * 23.0
                 f = 10.0
             }
             
